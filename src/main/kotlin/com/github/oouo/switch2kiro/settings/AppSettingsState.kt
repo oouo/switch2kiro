@@ -18,13 +18,31 @@ class AppSettingsState : PersistentStateComponent<AppSettingsState> {
 
     override fun loadState(state: AppSettingsState) {
         XmlSerializerUtil.copyBean(state, this)
+        // If saved path is the bare "kiro" default and it's not actually on PATH, re-detect
+        if (kiroPath == "kiro" && !isExecutableOnPath("kiro")) {
+            kiroPath = detectDefaultKiroPath()
+        }
     }
 
     companion object {
         fun getInstance(): AppSettingsState =
             ApplicationManager.getApplication().getService(AppSettingsState::class.java)
 
+        private fun isExecutableOnPath(name: String): Boolean {
+            return try {
+                val os = System.getProperty("os.name").lowercase()
+                val cmd = if (os.contains("windows")) arrayOf("where.exe", name) else arrayOf("which", name)
+                val process = ProcessBuilder(*cmd).start()
+                process.waitFor() == 0
+            } catch (_: Exception) {
+                false
+            }
+        }
+
         fun detectDefaultKiroPath(): String {
+            // First check if "kiro" is on PATH
+            if (isExecutableOnPath("kiro")) return "kiro"
+
             val os = System.getProperty("os.name").lowercase()
             val candidates = when {
                 os.contains("windows") -> listOf(

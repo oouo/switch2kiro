@@ -135,6 +135,17 @@
     </actions>
 
     <change-notes><![CDATA[
+        <h3>1.1.1</h3>
+        <ul>
+            <li>🐛 Fix: re-detect Kiro path when upgrading from older version with bare "kiro" default</li>
+        </ul>
+
+        <hr/>
+
+        <ul>
+            <li>🐛 修复：从旧版本升级时自动重新检测 Kiro 路径</li>
+        </ul>
+
         <h3>1.1.0</h3>
         <ul>
             <li>✨ Auto-detect Kiro default install path based on OS</li>
