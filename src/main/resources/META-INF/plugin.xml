@@ -135,6 +135,17 @@
     </actions>
 
     <change-notes><![CDATA[
+        <h3>1.2.0</h3>
+        <ul>
+            <li>✨ Auto-fallback: if configured Kiro path is invalid, auto-detect and fix at runtime</li>
+        </ul>
+
+        <hr/>
+
+        <ul>
+            <li>✨ 自动兼容：配置的 Kiro 路径无效时，运行时自动检测并修正</li>
+        </ul>
+
         <h3>1.1.1</h3>
         <ul>
             <li>🐛 Fix: re-detect Kiro path when upgrading from older version with bare "kiro" default</li>

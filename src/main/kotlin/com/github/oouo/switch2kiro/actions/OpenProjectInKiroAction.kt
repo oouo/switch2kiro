@@ -20,7 +20,7 @@ class OpenProjectInKiroAction : AnAction() {
         val projectPath = project.basePath ?: return
 
         val settings = AppSettingsState.getInstance()
-        val kiroPath = settings.kiroPath
+        val kiroPath = com.github.oouo.switch2kiro.utils.KiroPathResolver.resolve()
 
         val command = when {
             System.getProperty("os.name").lowercase().contains("mac") -> {

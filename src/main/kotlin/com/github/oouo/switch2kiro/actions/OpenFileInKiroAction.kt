@@ -28,8 +28,7 @@ class OpenFileInKiroAction : AnAction() {
         val column = editor?.caretModel?.logicalPosition?.column?.plus(1) ?: 1
 
         val filePath = virtualFile.path
-        val settings = AppSettingsState.getInstance()
-        val kiroPath = settings.kiroPath
+        val kiroPath = com.github.oouo.switch2kiro.utils.KiroPathResolver.resolve()
 
         val command = when {
             System.getProperty("os.name").lowercase().contains("mac") -> {
