@@ -16,9 +16,9 @@ object KiroPathResolver {
         // If configured path is a real file, use it
         if (File(configured).exists()) return configured
 
-        // If it's on PATH (e.g. "kiro"), verify it's actually reachable
+        // If it's a bare name on PATH, use it
         if (!configured.contains(File.separator) && !configured.contains("/") && !configured.contains("\\")) {
-            if (isOnPath(configured)) return configured
+            if (AppSettingsState.isOnPath(configured)) return configured
         }
 
         // Configured path is broken — re-detect and persist
@@ -27,15 +27,5 @@ object KiroPathResolver {
             settings.kiroPath = detected
         }
         return detected
-    }
-
-    private fun isOnPath(name: String): Boolean {
-        return try {
-            val os = System.getProperty("os.name").lowercase()
-            val cmd = if (os.contains("windows")) arrayOf("where.exe", name) else arrayOf("which", name)
-            ProcessBuilder(*cmd).start().waitFor() == 0
-        } catch (_: Exception) {
-            false
-        }
     }
 }
