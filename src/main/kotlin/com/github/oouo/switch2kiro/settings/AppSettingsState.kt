@@ -77,28 +77,43 @@ class AppSettingsState : PersistentStateComponent<AppSettingsState> {
 
         private fun queryWindowsRegistry(): String? {
             return try {
-                // Check HKCU uninstall entries (user install)
-                val regKeys = listOf(
+                val regRoots = listOf(
                     "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
                     "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
                 )
-                for (regKey in regKeys) {
-                    val process = ProcessBuilder(
-                        "reg", "query", regKey, "/s", "/f", "Kiro", "/d"
+                for (regRoot in regRoots) {
+                    // Step 1: enumerate all subkeys
+                    val enumProcess = ProcessBuilder(
+                        "reg", "query", regRoot
                     ).redirectErrorStream(true).start()
-                    val output = process.inputStream.bufferedReader().readText()
-                    process.waitFor()
+                    val enumOutput = enumProcess.inputStream.bufferedReader().readText()
+                    enumProcess.waitFor()
 
-                    // Parse InstallLocation from output
-                    val regex = Regex("""InstallLocation\s+REG_SZ\s+(.+)""")
-                    val match = regex.find(output)
-                    if (match != null) {
-                        val installDir = match.groupValues[1].trim()
+                    // Step 2: for each subkey, check if DisplayName contains "Kiro"
+                    for (line in enumOutput.lines()) {
+                        val subKey = line.trim()
+                        if (subKey.isEmpty() || !subKey.startsWith("HK")) continue
+
+                        val queryProcess = ProcessBuilder(
+                            "reg", "query", subKey, "/v", "DisplayName"
+                        ).redirectErrorStream(true).start()
+                        val queryOutput = queryProcess.inputStream.bufferedReader().readText()
+                        queryProcess.waitFor()
+
+                        if (!queryOutput.contains("Kiro", ignoreCase = true)) continue
+
+                        // Step 3: read InstallLocation from this subkey
+                        val locProcess = ProcessBuilder(
+                            "reg", "query", subKey, "/v", "InstallLocation"
+                        ).redirectErrorStream(true).start()
+                        val locOutput = locProcess.inputStream.bufferedReader().readText()
+                        locProcess.waitFor()
+
+                        val regex = Regex("""InstallLocation\s+REG_SZ\s+(.+)""")
+                        val match = regex.find(locOutput) ?: continue
+                        val installDir = match.groupValues[1].trim().trimEnd('\\')
                         val exePath = "$installDir\\Kiro.exe"
                         if (File(exePath).exists()) return exePath
-                        // Also try without trailing backslash
-                        val exePath2 = "${installDir.trimEnd('\\')}\\Kiro.exe"
-                        if (File(exePath2).exists()) return exePath2
                     }
                 }
                 null
