@@ -42,19 +42,15 @@ class OpenProjectInKiroAction : AnAction() {
             logger.info("Executing command: ${command.joinToString(" ")}")
             ProcessBuilder(*command).start()
         } catch (ex: Exception) {
-            logger.error("Failed to execute Kiro command: ${ex.message}", ex)
-            com.intellij.openapi.ui.Messages.showErrorDialog(
-                project,
-                """
-                ${ex.message}
-                
-                Please check:
-                1. Kiro path is correctly configured in Settings > Tools > Switch2Kiro
-                2. Kiro is properly installed on your system
-                3. The configured path points to a valid Kiro executable
-                """.trimIndent(),
-                "Error"
-            )
+            logger.warn("Failed to execute Kiro command: ${ex.message}", ex)
+            com.intellij.notification.NotificationGroupManager.getInstance()
+                .getNotificationGroup("Switch2Kiro")
+                .createNotification(
+                    "Kiro not found",
+                    "Please check Kiro path in Settings > Tools > Switch2Kiro",
+                    com.intellij.notification.NotificationType.WARNING
+                )
+                .notify(project)
         }
 
         WindowUtils.activeWindow()

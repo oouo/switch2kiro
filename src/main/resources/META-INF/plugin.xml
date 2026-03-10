@@ -115,6 +115,7 @@
             instance="com.github.oouo.switch2kiro.settings.AppSettingsConfigurable"
             id="com.github.oouo.switch2kiro.settings.AppSettingsConfigurable"
             displayName="Switch2Kiro"/>
+        <notificationGroup id="Switch2Kiro" displayType="BALLOON"/>
     </extensions>
 
     <actions>
