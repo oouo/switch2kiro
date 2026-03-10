@@ -1,0 +1,153 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.oouo.switch2kiro</id>
+    <name>Switch2Kiro</name>
+    <vendor url="https://github.com/oouo">oouo</vendor>
+
+    <description><![CDATA[
+    <p>Switch2Kiro is a JetBrains IDE plugin that enables seamless switching between JetBrains IDE and Kiro while maintaining precise cursor position.</p>
+    <p>This project is inspired by <a href="https://github.com/qczone/switch2cursor">switch2cursor</a>.</p>
+
+    <h2>Key Features</h2>
+    <ul>
+        <li>Open files in Kiro with one click</li>
+        <li>Maintain exact cursor position (line and column)</li>
+        <li>Support opening entire projects in Kiro</li>
+        <li>Convenient shortcuts (customizable):
+            <ul>
+                <li>Alt+Shift+O - Open current file</li>
+                <li>Alt+Shift+P - Open current project</li>
+            </ul>
+        </li>
+        <li>Multiple access methods: shortcuts, context menu, tools menu</li>
+    </ul>
+
+    <h2>Usage</h2>
+    <ul>
+        <li>Open current file:
+            <ul>
+                <li>Press Alt+Shift+O</li>
+                <li>Right-click in editor → Open File In Kiro</li>
+                <li>Tools menu → Open File In Kiro</li>
+            </ul>
+        </li>
+        <li>Open project:
+            <ul>
+                <li>Press Alt+Shift+P</li>
+                <li>Right-click in project view → Open Project In Kiro</li>
+                <li>Tools menu → Open Project In Kiro</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Configuration</h2>
+    <ul>
+        <li>Go to Settings/Preferences → Tools → Switch2Kiro</li>
+        <li>Set Kiro executable path (default is "kiro")</li>
+        <li>Customize shortcuts in Keymap settings</li>
+    </ul>
+
+    <h2>Requirements</h2>
+    <ul>
+        <li>Kiro installed (<a href="https://kiro.dev">https://kiro.dev</a>)</li>
+        <li>Compatible with all JetBrains IDEs</li>
+        <li>Supported IDE versions: 2022.3 and above</li>
+    </ul>
+
+    <hr/>
+
+    <p>Switch2Kiro 是一个 JetBrains IDE 插件，可以让你在 IDE 和 Kiro 之间无缝切换，并保持精确的光标位置。</p>
+    <p>本项目参考了 <a href="https://github.com/qczone/switch2cursor">switch2cursor</a>。</p>
+
+    <h2>主要特性</h2>
+    <ul>
+        <li>一键在 Kiro 中打开文件</li>
+        <li>精确保持光标位置（行号和列号）</li>
+        <li>支持在 Kiro 中打开整个项目</li>
+        <li>便捷的快捷键（可自定义）:
+            <ul>
+                <li>Alt+Shift+O - 打开当前文件</li>
+                <li>Alt+Shift+P - 打开当前项目</li>
+            </ul>
+        </li>
+        <li>多种访问方式：快捷键、右键菜单、工具菜单</li>
+    </ul>
+
+    <h2>使用方法</h2>
+    <ul>
+        <li>打开当前文件:
+            <ul>
+                <li>按下 Alt+Shift+O</li>
+                <li>在编辑器中右键 → Open File In Kiro</li>
+                <li>工具菜单 → Open File In Kiro</li>
+            </ul>
+        </li>
+        <li>打开项目:
+            <ul>
+                <li>按下 Alt+Shift+P</li>
+                <li>在项目视图中右键 → Open Project In Kiro</li>
+                <li>工具菜单 → Open Project In Kiro</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>配置说明</h2>
+    <ul>
+        <li>进入 Settings/Preferences → Tools → Switch2Kiro</li>
+        <li>设置 Kiro 可执行文件路径（默认为 "kiro"）</li>
+        <li>通过 Keymap 设置自定义快捷键</li>
+    </ul>
+
+    <h2>系统要求</h2>
+    <ul>
+        <li>已安装 Kiro (<a href="https://kiro.dev">https://kiro.dev</a>)</li>
+        <li>兼容所有 JetBrains IDE</li>
+        <li>支持的 IDE 版本：2022.3 及以上</li>
+    </ul>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.github.oouo.switch2kiro.settings.AppSettingsState"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.github.oouo.switch2kiro.settings.AppSettingsConfigurable"
+            id="com.github.oouo.switch2kiro.settings.AppSettingsConfigurable"
+            displayName="Switch2Kiro"/>
+    </extensions>
+
+    <actions>
+        <action id="OpenFileInKiro" class="com.github.oouo.switch2kiro.actions.OpenFileInKiroAction"
+            text="Open File In Kiro" description="Open current file in Kiro">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift O"/>
+        </action>
+
+        <action id="OpenProjectInKiro" class="com.github.oouo.switch2kiro.actions.OpenProjectInKiroAction"
+            text="Open Project In Kiro" description="Open current project in Kiro">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift P"/>
+        </action>
+    </actions>
+
+    <change-notes><![CDATA[
+        <h3>1.0.0</h3>
+        <ul>
+            <li>✨ Support opening files and projects in Kiro</li>
+            <li>🔧 Configure Kiro executable path</li>
+            <li>⌨️ Access via shortcuts, context menu and toolbar</li>
+        </ul>
+
+        <hr/>
+
+        <ul>
+            <li>✨ 支持在 Kiro 中打开文件和项目</li>
+            <li>🔧 支持配置 Kiro 可执行文件路径</li>
+            <li>⌨️ 支持快捷键、右键菜单和工具栏访问</li>
+        </ul>
+    ]]></change-notes>
+</idea-plugin>
