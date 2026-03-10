@@ -21,12 +21,11 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Generate Gradle Wrapper
-        run: gradle wrapper --gradle-version 8.5
+        with:
+          gradle-version: '8.5'
 
       - name: Build Plugin
-        run: ./gradlew buildPlugin
+        run: gradle buildPlugin
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
