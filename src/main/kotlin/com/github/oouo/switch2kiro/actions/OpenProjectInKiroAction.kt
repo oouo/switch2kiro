@@ -24,10 +24,14 @@ class OpenProjectInKiroAction : AnAction() {
 
         val command = when {
             System.getProperty("os.name").lowercase().contains("mac") -> {
-                arrayOf("open", "-a", kiroPath, "--args", projectPath)
+                if (kiroPath.endsWith(".app") || kiroPath.contains(".app/")) {
+                    arrayOf("open", "-a", kiroPath, "--args", projectPath)
+                } else {
+                    arrayOf(kiroPath, projectPath)
+                }
             }
             System.getProperty("os.name").lowercase().contains("windows") -> {
-                arrayOf("cmd", "/c", kiroPath, projectPath)
+                arrayOf(kiroPath, projectPath)
             }
             else -> {
                 arrayOf(kiroPath, projectPath)

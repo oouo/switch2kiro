@@ -33,10 +33,14 @@ class OpenFileInKiroAction : AnAction() {
 
         val command = when {
             System.getProperty("os.name").lowercase().contains("mac") -> {
-                arrayOf("open", "-a", kiroPath, "--args", "--goto", "$filePath:$line:$column")
+                if (kiroPath.endsWith(".app") || kiroPath.contains(".app/")) {
+                    arrayOf("open", "-a", kiroPath, "--args", "--goto", "$filePath:$line:$column")
+                } else {
+                    arrayOf(kiroPath, "--goto", "$filePath:$line:$column")
+                }
             }
             System.getProperty("os.name").lowercase().contains("windows") -> {
-                arrayOf("cmd", "/c", kiroPath, "--goto", "$filePath:$line:$column")
+                arrayOf(kiroPath, "--goto", "$filePath:$line:$column")
             }
             else -> {
                 arrayOf(kiroPath, "--goto", "$filePath:$line:$column")

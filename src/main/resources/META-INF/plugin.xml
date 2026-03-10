@@ -135,6 +135,19 @@
     </actions>
 
     <change-notes><![CDATA[
+        <h3>1.1.0</h3>
+        <ul>
+            <li>✨ Auto-detect Kiro default install path based on OS</li>
+            <li>⚡️ Improve command execution on Windows (direct exe call instead of cmd /c)</li>
+        </ul>
+
+        <hr/>
+
+        <ul>
+            <li>✨ 根据操作系统自动检测 Kiro 默认安装路径</li>
+            <li>⚡️ 优化 Windows 上的命令执行方式（直接调用 exe 而非 cmd /c）</li>
+        </ul>
+
         <h3>1.0.0</h3>
         <ul>
             <li>✨ Support opening files and projects in Kiro</li>
